@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Flipbook Viewer</title>
     
     <!-- DearFlip CSS -->
@@ -11,55 +11,37 @@
     <style>
         body {
             margin: 0;
-            padding: 20px;
+            padding: 0;
             background: #f5f5f5;
-            transition: padding 0.3s ease;
         }
-        .flipbook-wrapper {
+        .flipbook-container {
+            width: 100%;
             max-width: 900px;
             margin: 0 auto;
-            padding: 20px;
-            background: white;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
-            transition: all 0.3s ease;
+            position: relative;
+        }
+        /* Custom license attribution (replaces default }; ) */
+        .custom-attribution {
+            text-align: center;
+            padding: 8px;
+            font-size: 12px;
+            color: #666;
+        }
+        /* Hide default license indicator */
+        .df-license {
+            display: none !important;
         }
     </style>
-    
-    <!-- Embedding Adaptation Script -->
-    <script>
-        document.domain = 'github.io';
-        
-        window.addEventListener('load', function() {
-            // Remove padding and shadow when embedded
-            if(window !== window.top) {
-                document.body.style.padding = '0';
-                document.querySelector('.flipbook-wrapper').style.padding = '0';
-                document.querySelector('.flipbook-wrapper').style.boxShadow = 'none';
-                document.querySelector('.flipbook-wrapper').style.maxWidth = 'none';
-            }
-            
-            // Notify parent window of content height
-            function updateHeight() {
-                const height = document.body.scrollHeight;
-                window.parent.postMessage({
-                    type: 'DFLIP_RESIZE',
-                    height: height
-                }, '*');
-            }
-            
-            // Initial height update
-            updateHeight();
-            
-            // Update height on window resize
-            window.addEventListener('resize', updateHeight);
-        });
-    </script>
 </head>
 <body>
-    <div class="flipbook-wrapper">
+    <div class="flipbook-container">
         <!-- Flipbook Element -->
-        <div class="_df_book" id="mainFlipbook" 
-             source="https://a91ca9fe-6d24-428b-a38c-a16ea540b508.usrfiles.com/ugd/a91ca9_ec7de34310ce438cae3cb3f12636fb2e.pdf"></div>
+        <div class="_df_book" id="mainFlipbook" source="https://a91ca9fe-6d24-428b-a38c-a16ea540b508.usrfiles.com/ugd/a91ca9_ec7de34310ce438cae3cb3f12636fb2e.pdf"></div>
+        
+        <!-- Custom Attribution Footer -->
+        <div class="custom-attribution">
+            Flipbook powered by <a href="https://dearflip.com" target="_blank">DearFlip</a>
+        </div>
     </div>
 
     <!-- Required JavaScript -->
@@ -75,22 +57,18 @@
             backgroundColor: "#fff",
             enableDownload: true,
             enableFullscreen: true,
-            enablePrint: true,
+            enablePrint: false,
             soundEnable: false,
+            showToolbar: true,  // Keep toolbar but hide default license
             afterPageLoaded: function() {
-                // Update iframe height after each page load
+                // Optional: Send height updates to parent window if embedded
                 if(window !== window.top) {
-                    const height = document.body.scrollHeight;
                     window.parent.postMessage({
                         type: 'DFLIP_RESIZE',
-                        height: height
+                        height: document.body.scrollHeight
                     }, '*');
                 }
             }
-        };
-    </script>
-</body>
-</html>
         };
     </script>
 </body>
