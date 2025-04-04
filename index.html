@@ -23,17 +23,6 @@
             box-shadow: 0 0 10px rgba(0,0,0,0.1);
             transition: all 0.3s ease;
         }
-        #loader {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            z-index: 1000;
-            background: rgba(255,255,255,0.9);
-            padding: 20px;
-            border-radius: 5px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-        }
     </style>
     
     <!-- Embedding Adaptation Script -->
@@ -63,21 +52,14 @@
             
             // Update height on window resize
             window.addEventListener('resize', updateHeight);
-            
-            // Hide loader
-            if(document.getElementById('loader')) {
-                document.getElementById('loader').style.display = 'none';
-            }
         });
     </script>
 </head>
 <body>
-    <div id="loader">Loading flipbook...</div>
-    
     <div class="flipbook-wrapper">
         <!-- Flipbook Element -->
         <div class="_df_book" id="mainFlipbook" 
-             source="https://a91ca9fe-6d24-428b-a38c-a16ea540b508.usrfiles.com/ugd/a91ca9_ec7de34310ce438cae3cb3f12636fb2e.pdf"></div>
+             source="sample.pdf"></div>
     </div>
 
     <!-- Required JavaScript -->
@@ -105,6 +87,10 @@
                     }, '*');
                 }
             }
+        };
+    </script>
+</body>
+</html>
         };
     </script>
 </body>
