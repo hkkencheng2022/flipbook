@@ -3,39 +3,31 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Interactive Flipbook</title>
+    <title>Flipbook Viewer</title>
     
     <!-- DearFlip CSS -->
     <link href="dflip/css/dflip.min.css" rel="stylesheet">
     
     <style>
         body {
-            font-family: Arial, sans-serif;
             margin: 0;
             padding: 20px;
             background: #f5f5f5;
         }
-        .flipbook-container {
+        .flipbook-wrapper {
             max-width: 900px;
-            margin: 30px auto;
-            text-align: center;
-        }
-        h1 {
-            color: #333;
-            margin-bottom: 20px;
+            margin: 0 auto;
+            padding: 20px;
+            background: white;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
         }
     </style>
 </head>
 <body>
-    <div class="flipbook-container">
-        <h1>My Interactive Flipbook</h1>
-        
+    <div class="flipbook-wrapper">
         <!-- Flipbook Element -->
-        <div class="_df_book" id="myFlipbook" 
-             source="https://a91ca9fe-6d24-428b-a38c-a16ea540b508.usrfiles.com/ugd/a91ca9_ec7de34310ce438cae3cb3f12636fb2e.pdf"></div>
-        
-        <!-- Alternative: Button Trigger -->
-        <!-- <div class="_df_button" id="flipbookBtn">Open Flipbook</div> -->
+        <div class="_df_book" id="mainFlipbook" 
+             source="sample.pdf"></div>
     </div>
 
     <!-- Required JavaScript -->
@@ -44,23 +36,16 @@
     
     <!-- Configuration -->
     <script>
-        // Configuration for the main flipbook
-        var option_myFlipbook = {
-            webgl: true,               // Enable 3D effects
-            height: 600,              // Set height
-            backgroundColor: "#fff",  // Background color
+        var option_mainFlipbook = {
+            webgl: true,               // 3D flip effect
+            height: 600,              // Fixed height
+            autoEnableOutline: false,  // Disable outline
+            backgroundColor: "#fff",  // White background
             enableDownload: true,      // Show download button
-            enableFullscreen: true     // Enable fullscreen
+            enableFullscreen: true,    // Enable fullscreen
+            enablePrint: true,         // Show print button
+            soundEnable: false         // Disable page turn sounds
         };
-        
-        // If using button trigger, uncomment this:
-        /*
-        var option_flipbookBtn = {
-            source: "sample.pdf",
-            webgl: true,
-            height: 500
-        };
-        */
     </script>
 </body>
 </html>
