@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Flipbook Viewer</title>
     
     <!-- DearFlip CSS -->
@@ -13,6 +13,7 @@
             margin: 0;
             padding: 20px;
             background: #f5f5f5;
+            transition: padding 0.3s ease;
         }
         .flipbook-wrapper {
             max-width: 900px;
@@ -20,10 +21,59 @@
             padding: 20px;
             background: white;
             box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+        }
+        #loader {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 1000;
+            background: rgba(255,255,255,0.9);
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
         }
     </style>
+    
+    <!-- Embedding Adaptation Script -->
+    <script>
+        document.domain = 'github.io';
+        
+        window.addEventListener('load', function() {
+            // Remove padding and shadow when embedded
+            if(window !== window.top) {
+                document.body.style.padding = '0';
+                document.querySelector('.flipbook-wrapper').style.padding = '0';
+                document.querySelector('.flipbook-wrapper').style.boxShadow = 'none';
+                document.querySelector('.flipbook-wrapper').style.maxWidth = 'none';
+            }
+            
+            // Notify parent window of content height
+            function updateHeight() {
+                const height = document.body.scrollHeight;
+                window.parent.postMessage({
+                    type: 'DFLIP_RESIZE',
+                    height: height
+                }, '*');
+            }
+            
+            // Initial height update
+            updateHeight();
+            
+            // Update height on window resize
+            window.addEventListener('resize', updateHeight);
+            
+            // Hide loader
+            if(document.getElementById('loader')) {
+                document.getElementById('loader').style.display = 'none';
+            }
+        });
+    </script>
 </head>
 <body>
+    <div id="loader">Loading flipbook...</div>
+    
     <div class="flipbook-wrapper">
         <!-- Flipbook Element -->
         <div class="_df_book" id="mainFlipbook" 
@@ -37,14 +87,24 @@
     <!-- Configuration -->
     <script>
         var option_mainFlipbook = {
-            webgl: true,               // 3D flip effect
-            height: 600,              // Fixed height
-            autoEnableOutline: false,  // Disable outline
-            backgroundColor: "#fff",  // White background
-            enableDownload: true,      // Show download button
-            enableFullscreen: true,    // Enable fullscreen
-            enablePrint: true,         // Show print button
-            soundEnable: false         // Disable page turn sounds
+            webgl: true,
+            height: 600,
+            autoEnableOutline: false,
+            backgroundColor: "#fff",
+            enableDownload: true,
+            enableFullscreen: true,
+            enablePrint: true,
+            soundEnable: false,
+            afterPageLoaded: function() {
+                // Update iframe height after each page load
+                if(window !== window.top) {
+                    const height = document.body.scrollHeight;
+                    window.parent.postMessage({
+                        type: 'DFLIP_RESIZE',
+                        height: height
+                    }, '*');
+                }
+            }
         };
     </script>
 </body>
