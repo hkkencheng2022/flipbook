@@ -2,8 +2,8 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Flipbook Viewer</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Interactive Flipbook</title>
     
     <!-- DearFlip CSS -->
     <link href="dflip/css/dflip.min.css" rel="stylesheet">
@@ -12,7 +12,8 @@
         body {
             margin: 0;
             padding: 0;
-            background: #f5f5f5;
+            background: #ffffff;
+            overflow-x: hidden;
         }
         .flipbook-container {
             width: 100%;
@@ -20,18 +21,51 @@
             margin: 0 auto;
             position: relative;
         }
-        /* Custom license attribution (replaces default }; ) */
-        .custom-attribution {
+        /* Hide default license indicator */
+        .df-license { 
+            display: none !important; 
+        }
+        /* Custom footer */
+        .custom-footer {
             text-align: center;
-            padding: 8px;
+            padding: 10px;
             font-size: 12px;
             color: #666;
-        }
-        /* Hide default license indicator */
-        .df-license {
-            display: none !important;
+            font-family: Arial, sans-serif;
         }
     </style>
+    
+    <!-- Resize Script -->
+    <script>
+        // Function to update iframe height
+        function updateHeight() {
+            const height = document.documentElement.scrollHeight || document.body.scrollHeight;
+            window.parent.postMessage({
+                type: 'DFLIP_RESIZE',
+                height: height
+            }, '*'); // For security, replace * with your Wix domain in production
+        }
+        
+        // Initialize event listeners
+        window.addEventListener('load', function() {
+            // Initial height update
+            updateHeight();
+            
+            // Update on resize
+            window.addEventListener('resize', updateHeight);
+            
+            // Update after page turns (DearFlip specific event)
+            if (typeof dFlip !== 'undefined') {
+                dFlip.event.subscribe('PageChanged', updateHeight);
+            }
+            
+            // Cleaner embedding when in iframe
+            if (window !== window.top) {
+                document.body.style.padding = '0';
+                document.querySelector('.flipbook-container').style.maxWidth = 'none';
+            }
+        });
+    </script>
 </head>
 <body>
     <div class="flipbook-container">
@@ -39,8 +73,8 @@
         <div class="_df_book" id="mainFlipbook" source="https://a91ca9fe-6d24-428b-a38c-a16ea540b508.usrfiles.com/ugd/a91ca9_ec7de34310ce438cae3cb3f12636fb2e.pdf"></div>
         
         <!-- Custom Attribution Footer -->
-        <div class="custom-attribution">
-            Flipbook powered by <a href="https://dearflip.com" target="_blank">DearFlip</a>
+        <div class="custom-footer">
+            Powered by <a href="https://dearflip.com" target="_blank">DearFlip</a>
         </div>
     </div>
 
@@ -48,26 +82,21 @@
     <script src="dflip/js/libs/jquery.min.js"></script>
     <script src="dflip/js/dflip.min.js"></script>
     
-    <!-- Configuration -->
+    <!-- Flipbook Configuration -->
     <script>
         var option_mainFlipbook = {
             webgl: true,
             height: 600,
             autoEnableOutline: false,
-            backgroundColor: "#fff",
+            backgroundColor: "#ffffff",
             enableDownload: true,
             enableFullscreen: true,
             enablePrint: false,
             soundEnable: false,
-            showToolbar: true,  // Keep toolbar but hide default license
+            showToolbar: true,
             afterPageLoaded: function() {
-                // Optional: Send height updates to parent window if embedded
-                if(window !== window.top) {
-                    window.parent.postMessage({
-                        type: 'DFLIP_RESIZE',
-                        height: document.body.scrollHeight
-                    }, '*');
-                }
+                // Additional height update after content loads
+                setTimeout(updateHeight, 100);
             }
         };
     </script>
